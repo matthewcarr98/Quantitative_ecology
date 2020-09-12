@@ -1,4 +1,4 @@
-#Matthew Carr
+#Matthew Carr (3733741)
 #11 September 2020
 #Quantitative exam
 
@@ -16,7 +16,7 @@ library(ggsn)
 library(ggpubr)
 library(maps)
 
-# pre questions setup -----------------------------------------------------
+####pre questions setup -----------------------------------------------------
 
 
 
@@ -42,9 +42,9 @@ head(env)
 tail(env)
 summary(env)
 
-# Question 1 --------------------------------------------------------------
+####Question 1 --------------------------------------------------------------
 
-###############Question A#########
+####Question A#########
 
 #Specifing the demensions of species data
 dim(spe)
@@ -55,7 +55,7 @@ dim(spe)
 dim(env)
 #Environmnetal data has dim value of 89 3, hwich means there are 89 observations (rows) and 3 variables (columns)
 
-#####Question B#####
+####Question B#####
 
 
 #Spcies richness
@@ -168,7 +168,7 @@ ggarrange(temp_plot, depth_plot, nrow = 2, ncol = 2, common.legend = FALSE )
 #high diversity, where the temperature gradient is the highest, showing that these sites species diversty is reliant on higher temperature. The temperature gradient  decreases as the depth gradients increases 
 #and vice versa. The least amount of diversity happens in thw middle of all the sites, where there are the lowest environmnetal gradients to influence diversity.
 
-#####Question E#####
+####Question E#####
 
 #Descriptive statistics
 
@@ -226,7 +226,7 @@ temp_desp_box <- boxplot(env$Temperature, ylab = "Temperature (C)", horizontal =
 #Creating the env vectors
 env_cord <- cbind(cord[,-1], env[,-1])
 
-#####RAW DATA CA####
+####RAW DATA CA####
 (spe.ca <- cca(spe[, -1]))#CA together will erxplain the added up variations off the variations
 
 summary(spe.ca)
@@ -287,7 +287,7 @@ plot(spe.ca.env)
 plot(spe.ca.env, p.max = 0.05, col = "red")
 
 
-##PRESENCE AND ABSENCE####
+####PRESENCE AND ABSENCE####
 
 (spe.ca <- cca(spe2))#CA together will erxplain the added up variations off the variations
 
@@ -348,7 +348,7 @@ plot(spe.ca.env)
 
 plot(spe.ca.env, p.max = 0.05, col = "red")
 
-######LOG TRANFORMED DATA####
+####LOG TRANFORMED DATA####
 
 #creating log transformed data
 log <- decostand(spe[,-1], method = "log")
@@ -433,7 +433,7 @@ plot(spe.ca.env, p.max = 0.05, col = "red")
 #On the bilot, species No_rk and Tr_es with the highest positive values in CA1 will be most abundant on the postive values of the grapgh and so they will be found on the right hand side of the biplots. The two 
 #species with the highest negative values in CA1 are situated in left hand side, where they wiil be most abundant.
 
-#####iii)#######
+####iii)#######
 
 ##i) RAw DATA
 
@@ -525,7 +525,7 @@ BCI.env$Habitat <- as.numeric(factor(BCI.env$Habitat))
 BCI.env$Stream <- as.numeric(factor(BCI.env$Stream))
 
 
-#####CREATING PCA####
+####CREATING PCA####
 
 # Creating the clearplot function -----------------------------------------
 
@@ -777,7 +777,7 @@ BCI.env$Stream <- as.numeric(factor(BCI.env$Stream))
   if(!silent) cat("\nThe radius of the equilibrium circle is thus", (2/p)^0.5, "*", mult.spe, "*", fact.spe, "=", radius,"\n")
 }
 
-#######PCA2######
+####PCA2######
 #Creating a PCA of the environmental data to help anylise gradients
 ggbiplot(BCI.env)
 
@@ -802,20 +802,26 @@ cleanplot.pca(env_pca, scaling = 2, mar.percent = 0.04)
 #tmp <- ordisurf(data = env_pca ~ bod, add= TRUE, col = "turquoise", knots =1)#adds the lines
 #tmp <- ordisurf(env_pca ~ alt, add= TRUE, col = "salmon", knots =1)
 
-#####Creating CA#####
+####Creating CA#####
 
-(spe.ca <- cca(PA_bci))#CA together will erxplain the added up variations off the variations
+(spe.ca1 <- cca(PA_bci))#CA together will erxplain the added up variations off the variations
 
-summary(spe.ca)
+summary(spe.ca1)
 
 #Plotting the Correspondence Analysis (CA), to show which sepcies are influenced by what site
 
 par(mfrow = c(1, 2))
 
-plot(spe.ca, scaling = 2, choices = c(1,2), main = "CA - scaling 1")#is the pca plot that is being created
-plot(spe.ca, choices = c(1,2), main = "CA - scaling 2")
+plot(spe.ca1, scaling = 2, choices = c(1,2), main = "CA - scaling 1")#is the pca plot that is being created
+plot(spe.ca1, choices = c(1,2), main = "CA - scaling 2")
 
 
+(spe.ca.env1 <- envfit(spe.ca1, BCI.env, scaling = 2)) # Scaling 2 is default
+plot(spe.ca.env1)
+
+# Plot significant variables with a different colour
+
+plot(spe.ca.env1, p.max = 0.05, col = "red")
 #evplot <- function(ev)
 
 #Fit and Plot Smooth Surfaces of Variables on Ordination
@@ -827,28 +833,28 @@ palette(viridis(8))
 par(mar = c(4, 4, 0.9, 0.5) + .1, mfrow = c(2, 2))
 
 #Plot Marila.laxiflora species (0.877674 -0.057013)
-with(PA_bci, tmp <- ordisurf(spe.ca ~ Marila.laxiflora, bubble = 3,
+with(PA_bci, tmp <- ordisurf(spe.ca1 ~ Marila.laxiflora, bubble = 3,
                           family = quasipoisson, knots = 2, col = 6,
                           display = "sites", main = "Marila.laxiflora"))
 
 abline(h = 0, v = 0, lty = 3)
 
 #Plot Vachellia.melanoceras  species (0.781645  1.012246)
-with(PA_bci, tmp <- ordisurf(spe.ca ~ Vachellia.melanoceras , bubble = 3,
+with(PA_bci, tmp <- ordisurf(spe.ca1 ~ Vachellia.melanoceras , bubble = 3,
                           family = quasipoisson, knots = 2, col = 6,
                           display = "sites", main = "Vachellia.melanoceras"))
 
 abline(h = 0, v = 0, lty = 3)
 
 #Chimarrhis.parviflora (-4.017029  1.024256) 
-with(PA_bci, tmp <- ordisurf(spe.ca ~ Chimarrhis.parviflora, bubble = 3,
+with(PA_bci, tmp <- ordisurf(spe.ca1 ~ Chimarrhis.parviflora, bubble = 3,
                           family = quasipoisson, knots = 2, col = 6,
                           display = "sites", main = "Chimarrhis.parviflora"))
 
 abline(h = 0, v = 0, lty = 3)
 
 #plot species Alibertia.edulis (-4.017029  1.024256 )
-with(PA_bci, tmp <- ordisurf(spe.ca ~ Alibertia.edulis, bubble = 3,
+with(PA_bci, tmp <- ordisurf(spe.ca1 ~ Alibertia.edulis, bubble = 3,
                           family = quasipoisson, knots = 2, col = 6,
                           display = "sites", main = "Alibertia.edulis"))
 
@@ -857,15 +863,12 @@ abline(h = 0, v = 0, lty = 3)
 # A posterior projection of environmental variables in a CA
 # The last plot produced (CA scaling 2) must be active
 
-(spe.ca.env <- envfit(spe.ca, BCI.env, scaling = 2)) # Scaling 2 is default
-plot(spe.ca.env)
+(spe.ca.env1 <- envfit(spe.ca1, BCI.env, scaling = 2)) # Scaling 2 is default
+plot(spe.ca.env1)
 
 # Plot significant variables with a different colour
 
-plot(spe.ca.env, p.max = 0.05, col = "red")
-
-
-
+plot(spe.ca.env1, p.max = 0.05, col = "red")
 
 
 ####A) ######
@@ -1007,7 +1010,7 @@ UTM.NS_desp_box <- boxplot(BCI.env$UTM.NS, ylab = "UTM.NS", horizontal = TRUE)
 
 Habitat_desp_box <- boxplot(BCI.env$Habitat, ylab = "Habitat", horizontal = TRUE)
 
-Stream_desp_box <- boxplot(BCI.env$Stream, ylab = "Stream", horizontal = TRUE)
+#Stream_desp_box <- boxplot(BCI.env$Stream, ylab = "Stream", horizontal = TRUE)
 
 EnvHet_desp_box <- boxplot(BCI.env$EnvHet, ylab = "EnvHet", horizontal = TRUE)
 
@@ -1049,7 +1052,7 @@ simp_plot2 <- plot(simpson1, type = "line", ylab = "simp1", xlab = "ID", )
 #cvlose to each other.
 
 
-######Question C#########
+####Question C#########
 
 #                   Inertia Proportion
 #Total               6          1
@@ -1080,9 +1083,7 @@ simp_plot2 <- plot(simpson1, type = "line", ylab = "simp1", xlab = "ID", )
 #34 -0.76871 -0.05600  0.41980 -0.01424  0.741471  3.969e-01
 
 
-
-
-#The summary of the PCA env data will give you the PC  Eigenvalue  from PC1-6.They have the Eigenvalue of  1.5471, 1.2030, 1.0071, 0.9810, 0.7615 and 0.50025 respectively of the total inertia value of 6. They portion of variables that they exlain
+#The summary of the PCA env data will give you the PC  Eigenvalue  from PC1-6.They have the Eigenvalue of  1.5471, 1.2030, 1.0071, 0.9810, 0.7615 and 0.50025 respectively of the total inertia value of 6. The portion of variables that they explain
 #is given as 0.2579, 0.2005, 0.1679, 0.1635, 0.1269 and 0.08337 respectively. Cumulatively they explain 1.00 (100%) of the variations. Pc 1 and PC2 does not explain the majority of the data, Cumulatively only explains 0.4583 (46%) of the variations.
 #Only After PC3 is included will the they explain the majority of the variations (above 50 %), with a value of 0.6262 (62%).
 
@@ -1091,3 +1092,256 @@ simp_plot2 <- plot(simpson1, type = "line", ylab = "simp1", xlab = "ID", )
 
 #The sites that are the most significant values in PC1 are sites 50 (1.14428) and 1(1.03477) with the highest positive values (the first and last site). The lowest values on the data is from sites 38 (-0.78461) and 34 (-0.76871). These opposite extremes will have the greatest
 #influence on the data. 
+
+####Question D#####
+
+#             Inertia Proportion
+#Total           1.463          1
+#Unconstrained   1.463          1
+
+#                       CA1     CA2     CA3     CA4     CA5     CA6   
+#Eigenvalue            0.08573 0.07513 0.06770 0.06047 0.05591 0.05359 
+#Proportion Explained  0.05862 0.05137 0.04629 0.04135 0.03823 0.03664 
+#Cumulative Proportion 0.05862 0.10999 0.15628 0.19762 0.23585 0.27249 
+
+#Species scores
+#Highest
+#                        CA1       CA2        CA3        CA4        CA5        CA6
+#Ficus.trigonata        0.910294  0.696359 -2.352e-01  1.2065306  0.1450310 -0.0935792
+#Vachellia.melanoceras  0.781645  1.012246  1.503e-01  0.5662438  0.2594313 -1.0630445
+#Highest negative
+#Alibertia.edulis      -4.017029  1.024256  1.663e-01  0.9795730 -1.5069604 -0.0785815
+#Chimarrhis.parviflora -4.017029  1.024256  1.663e-01  0.9795730 -1.5069604 -0.0785815
+
+#Site scores (weighted averages of species scores)
+#         CA1      CA2      CA3       CA4      CA5       CA6
+#Highest
+#44  1.272698  0.47830 -0.01895  2.166669  0.27757 -0.758878
+#43  1.165979  1.01137  0.12488  1.449431  0.44576 -0.646203
+#Lowest
+#13 -4.017029  1.02426  0.16634  0.979573 -1.50696 -0.078581
+#18 -3.188640  1.11724  0.66103 -0.450969  1.69738  0.964040
+
+
+#Findings
+#The summary of the CA spe data will give you the CA  Eigenvalue  from CA1-50.The Eigenvalue of  will add up to the total inertia value of 1.463 . The Proportion Explained of the variables of the first  two CA are 0.05862 and 0.0513. Together the explain
+#0.10999 (11%) of the variation in this data, this is a very weak value and so this is a bad at capturing the variation that exist across space in the community composition.
+
+#The species scores  was the highest at sp Ficus.trigonata (0.910294)  and sp Vachellia.melanoceras (0.781645). The lowest species score is from species Alibertia.edulis (-4.017029) and sp Chimarrhis.parviflora (-4.017029). All these species exhibit the outer 
+#extremes of the species values and so will have the greatest influence on the data.
+
+#The sites that are the most significant values in CA1 are sites 50 (1.035560) and 42 (0.964960) with the highest positive values. The lowest values on the data is from sites 13 (-4.017029) and 18 (-3.188640). These opposite extremes will have the greatest
+#influence on the data of the sites. 
+
+####Question E#####
+
+par(mfrow = c(2, 2))
+
+#CA1 sp higest influencial values
+with(BCI, tmp <- ordisurf(spe.ca1 ~ Alibertia.edulis, bubble = 3, # setting ca wrt a single species specifically                           
+                          family = gaussian, knots = 2, col = 6,                           
+                          display = "sites", main = "Alibertia.edulis")) 
+
+abline(h = 0, v = 0, lty = 3)
+
+#Chimarrhis.parviflora
+
+with(BCI, tmp <- ordisurf(spe.ca1 ~ Chimarrhis.parviflora, bubble = 3, # setting ca wrt a single species specifically                           
+                          family = gaussian, knots = 2, col = 6,                           
+                          display = "sites", main = "Chimarrhis.parviflora")) 
+
+abline(h = 0, v = 0, lty = 3)
+
+#Largest values in CA2
+
+#Abarema.macradenia
+with(BCI, tmp <- ordisurf(spe.ca1 ~ Abarema.macradenia, bubble = 3, # setting ca wrt a single species specifically                           
+                          family = gaussian, knots = 2, col = 6,                           
+                          display = "sites", main = "Abarema.macradenia")) 
+
+abline(h = 0, v = 0, lty = 3)
+
+
+#Ficus.colubrinae                  
+
+with(BCI, tmp <- ordisurf(spe.ca1 ~ Ficus.colubrinae, bubble = 3, # setting ca wrt a single species specifically                           
+                          family = gaussian, knots = 2, col = 6,                           
+                          display = "sites", main = "Ficus.colubrinae")) 
+
+abline(h = 0, v = 0, lty = 3)
+
+# A posterior projection of environmental variables in a CA
+# The last plot produced (CA scaling 2) must be active
+
+(spe.ca.env1 <- envfit(spe.ca1, BCI.env, scaling = 2)) # Scaling 2 is default
+plot(spe.ca.env1)
+
+# Plot significant variables with a different colour
+
+plot(spe.ca.env1, p.max = 0.05, col = "red")
+
+#CA  analysis is the to use when you want to look at the species data, PCA is more important when looking at the variations in the environmental data. The CA1 analysis of the species will be more important to look at than the CA2. The CA1 will be a better 
+#representation of the variations, becuase CA1 explains a larger Proportion off the data than CA2, CA1 explains 0.05862 (6%) of the variation, where CA2 only explains  0.05137 (5%) of the variation. WE can see CA1 has the higher and more significant values.
+
+#From the CA1 plots has higher values where the species occur in abundance than the CA2 plot. This can indicate a higher and significant species score  than the CA2.
+
+####Question F#########
+
+#Non-Metric Multidimensional Scaling (NMDS)
+
+spe.nmds <- metaMDS(PA_bci, distance = "jaccard", choices = c(1,2))
+spe.nmds 
+
+spe.nmds$stress
+
+#dv new
+
+plot(spe.nmds, type = "t", main = paste("NMDS/Percentage difference - Stress =", round(spe.nmds$stress, 3)))
+
+#sharpness & goodness plot of fit
+
+par(mfrow = c(1,2))
+
+stressplot(spe.nmds, main = "shepard plot")
+
+gof <- goodness(spe.nmds)
+
+plot(spe.nmds, type = "t", main = "Goodness of fit")
+
+points(spe.nmds, display = "sites", cex = gof*300)
+
+
+(spe.ca.env1 <- envfit(spe.ca1, BCI.env, scaling = 2)) # Scaling 2 is default
+plot(spe.ca.env1)
+
+# Plot significant variables with a different colour
+
+plot(spe.ca.env1, p.max = 0.05, col = "red")
+
+
+#NMDS 1 nad 3
+
+spe.nmds1 <- metaMDS(PA_bci, distance = "jaccard", choices = c(1,3))
+spe.nmds1 
+
+spe.nmds1$stress
+
+#dv new
+
+plot(spe.nmds1, type = "t", main = paste("NMDS/Percentage difference - Stress =", round(spe.nmds$stress, 3)))
+
+#sharpness & goodness plot of fit
+
+par(mfrow = c(1,2))
+
+stressplot(spe.nmds1, main = "shepard plot")
+
+gof <- goodness(spe.nmds1)
+
+plot(spe.nmds1, type = "t", main = "Goodness of fit")
+
+points(spe.nmds1, display = "sites", cex = gof*300)
+
+
+(spe.ca.env1 <- envfit(spe.ca1, BCI.env, scaling = 2)) # Scaling 2 is default
+plot(spe.ca.env1)
+
+# Plot significant variables with a different colour
+
+plot(spe.ca.env1, p.max = 0.05, col = "red")
+
+
+#NMDS Findings
+
+#A NMDS represent as well as possible the ordering relationships among objects in a small and specified number of axes. Nmds can produce ordinations of objects from any distance matrix. After the function of metaMDS is applied(using the the jaccard method, 
+#because the data is binary), we obtain the nmds data. Then by looking at the Stress value of the nmds data we get the value of 0.2722068 This stress value is higher than 0.2, so it tell us that the data is not reliable (stress is the scatter of observed 
+#dissimilarities against expected monotone regression). 
+
+#From the shepard/stress plot shows the scatter of values from the red line. The plot shows that the points are relatively scattered, with the majority of the points being located relativey random (scattered) and away from the red line.This indicates that 
+#the observed ordination distances and dissimilarity is relatively large and that there are relatively high amounts of stress.
+
+#The goodness of fit plot represents the results from the  goodness() function that looks at the cumulative proportion of inertia accounted by species up to chosen axes. The values of the goodness matrix indicates how well each site is fitted into the data.
+#The plot shows the sites with a bubble around them, poorly fitted sites have larger bubbles around them, because they have larger values. This is evident in these sites because they are all very large indcating that they are stressed and this can be because
+#the data is unreliable (due toits value being larger than 0.2).The large circles is indicating that the data is poorly fitted.
+
+
+####Question G#######
+?BCI
+
+#i) 
+#The anylasis that were done in previous papers like Pyke et.al. (2001), also used NMDS in their study. They focused more on env. data such as dry sites to wet site (Precepitation) which BCI is. Our anylasis will be ables to add to the 
+#env data of these analysis by showing the species reponses more clearly of the wet site such as BCI. Other papers like Harms et.al. in 2001, did not include the a NMDS plot.By adding our own NMDS plot to their data we will able to 
+#include more environmental dat to the study that mainly focused on species variables like stem density. The NMDS will also be able to explain the stresses that occur within these datasets
+
+#ii) 
+#In our anylasis we never looked at the molecular phylogeny such as in the paper of Zanne et.al. in 2014. We also did not look at genetic analysis of DNA barcoding that was done by Kress et.al. in 2009.
+
+
+# Question 3 --------------------------------------------------------------
+
+#RDA BCI anylasis
+
+spe.hel <-as.tibble(decostand(BCI, "hellinger"))
+
+spe_rda <- rda(spe.hel ~ ., BCI.env)
+
+
+sum(spe_rda$CA$eig)
+
+sum(spe_rda$CCA$eig)
+
+
+#Proportion of variation explained
+
+spe_rda$CCA$eig[1] /sum(spe_rda$CCA$eig)+ sum(spe_rda$CA$eig)
+
+summary(spe_rda)#scalinf 2 default
+
+#Canonical coefficients from rda object
+
+coef(spe_rda)
+
+#unadjusted R^2
+(R2 <- RsquareAdj(spe_rda)$r.squared)
+
+#Adjusted R^2
+(R2adj <- RsquareAdj(spe_rda)$adj.r.squared)
+
+rda_plot <-plot(spe_rda)
+
+#Explanations
+
+#RDA is a method to extract and summarise the variation in a set of response variables that can be explained by a set of explanatory variables. RDA is a direct gradient analysis which summarises linear relationships between components of response variables 
+#that are redundant“ wich (i.e. „explained“ by) a set of explanatory variables. 
+
+#              Inertia Proportion
+#Total         0.25010     1.0000
+#Constrained   0.05936     0.2373
+#Unconstrained 0.19074     0.7627
+
+
+#                       RDA1    RDA2     RDA3     RDA4     RDA5     RDA6
+#Eigenvalue            0.02741 0.01119 0.008305 0.005908 0.004009 0.002538
+#Proportion Explained  0.46181 0.18844 0.139913 0.099536 0.067539 0.042763
+#Cumulative Proportion 0.46181 0.65025 0.790162 0.889698 0.957237 1.000000
+
+#The total inertia of the Constrained RDA data is 0.05936 The eigenvalue ofthe RDA1 fill 0.02741 of the total inertia, this is the largest eigen value that will contribute.
+#The Propotion explained by the RDA1 and RDA2 are 0.46181 and 0.18844, respectively. Cumulatively they explain (65%), meaing that they explain more than the half
+#the variation of the dataset. It will go to RDA6 before the 1 value is filled, showingthere is 6 RDA eigenvalues.
+
+#Eigenvalues, and their contribution to the variance 
+#Importance of components:
+#                       RDA1    RDA2     RDA3     RDA4     RDA5     RDA6     PC1     PC2     PC3
+#Eigenvalue            0.02741 0.01119 0.008305 0.005908 0.004009 0.002538 0.03681 0.01727 0.01237
+#Proportion Explained  0.10961 0.04472 0.033207 0.023624 0.016030 0.010149 0.14717 0.06905 0.04945
+#Cumulative Proportion 0.10961 0.15433 0.187539 0.211162 0.227192 0.237342 0.38451 0.45356 0.50301
+
+#The total inertia of the RDA data is 0.25010. The eigenvalue of the RDA1 fills 0.02741 of the total inertia, this is the largest eigen value that will contribute. This will 
+#contribute less to the Cumulative variation explains, due to the increase in the number of eigenvalues (PC1-43).  Proportionly it only explains 0.10961 (11%), which is much 
+#less significant than the constrained (46%) and RDA2 only explains 0.04472 (4%). Comulatively they explain only 0.15433 (15%) of the variance.
+
+
+#Species, rows (sites) and environmental data is also included in the RDA values  which gives Species scores, Site scores (weighted sums of species scores)/Site constraints 
+#(linear combinations of constraining variables)  and Biplot scores for constraining variables(env), respectively.
+
+#These values are plotted, showing the reposes of species and sites to the environment and each other.
